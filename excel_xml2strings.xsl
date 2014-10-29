@@ -18,15 +18,42 @@
 
   <xsl:template match="ss:Table" mode="this:print-column-to-file">
     <xsl:param name="index"/>
+    <!-- find the column name to extract values from, by given index -->
     <xsl:variable name="column-name">
       <xsl:apply-templates select="ss:Row[1]" mode="this:extract-nth-value">
         <xsl:with-param name="index" select="$index"/>
       </xsl:apply-templates>
     </xsl:variable>
+    <!-- create a filename from column name -->
     <xsl:variable name="filename" select="concat($column-name, '.xml')"/>
-    <xsl:message><xsl:value-of select="concat('Writing to ', $column-name, ' column ', $index)"/></xsl:message>
-    <xsl:result-document href="$filename" method="xml">
-      
+    <xsl:message><xsl:value-of select="concat('Writing to ', $filename, ' column ', $index, '(', $column-name, ')')"/></xsl:message>
+    <xsl:result-document href="{$filename}" method="xml" indent="yes">
+      <!-- the root element called resources -->
+      <xsl:element name="resources">
+        <!-- write all rows except first - first contains column names -->
+        <xsl:for-each select="ss:Row[position()>1]">
+          <!-- string id -->
+          <xsl:variable name="name">
+            <xsl:apply-templates select="." mode="this:extract-nth-value">
+              <xsl:with-param name="index" select="1"/>
+            </xsl:apply-templates>
+          </xsl:variable>
+          <!-- translated value -->
+          <xsl:variable name="value">
+            <xsl:apply-templates select="." mode="this:extract-nth-value">
+              <xsl:with-param name="index" select="$index"/>
+            </xsl:apply-templates>
+          </xsl:variable>
+          <!-- write element -->
+          <xsl:element name="string">
+            <xsl:attribute name="name" select="$name"/>
+            <!-- translated value -->
+            <xsl:apply-templates select="." mode="this:extract-nth-value">
+              <xsl:with-param name="index" select="$index"/>
+            </xsl:apply-templates>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:element>
     </xsl:result-document>
   </xsl:template>
   
