@@ -47,10 +47,10 @@
           <!-- write element -->
           <xsl:element name="string">
             <xsl:attribute name="name" select="$name"/>
-            <!-- translated value -->
-            <xsl:apply-templates select="." mode="this:extract-nth-value">
-              <xsl:with-param name="index" select="$index"/>
-            </xsl:apply-templates>
+            <xsl:if test="contains($value, '%')">
+              <xsl:attribute name="formatted" select="'false'"/>
+            </xsl:if>
+            <xsl:value-of select="$value"/>
           </xsl:element>
         </xsl:for-each>
       </xsl:element>
