@@ -81,13 +81,6 @@
   <xsl:template match="ss:Workbook">
     <xsl:message>Processing Workbook</xsl:message>
     <xsl:apply-templates select="ss:Worksheet"/>
-    <!--xsl:variable name="file-name" select="'strings.csv'"/>
-    <xsl:result-document href="{$file-name}" method="text">
-      <xsl:value-of select="'Element id,String&#10;'"/>
-      <xsl:for-each select="string">
-        <xsl:value-of select="concat(@name, ',', ., '&#10;')"/>
-      </xsl:for-each>
-    </xsl:result-document-->
   </xsl:template>
 
   
